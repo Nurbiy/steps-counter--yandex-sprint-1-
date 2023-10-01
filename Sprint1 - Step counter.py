@@ -18,24 +18,37 @@ storage_data = {}  # Словарь для хранения полученных
 
 def check_correct_data(data):
     """Проверка корректности полученного пакета."""
+    if len(data) != 2 or (None in data):
+        return False
+    else:
+        return True
+'''    
     return not (len(data) != 2 or (None in data))
+'''
     # Если длина пакета отлична от 2
     # или один из элементов пакета имеет пустое значение -
     # функция вернет False, иначе - True.
 
+'''
 def max_time(any_dict):
     keys = list(any_dict.keys())
     result = dt.time(0, 0)
     for key in keys:
         if result < dt.datetime.strptime(key, FORMAT).time():
             result = dt.datetime.strptime(key, FORMAT).time()
-    return result
-    
+    return result  
+'''
 
 def check_correct_time(time):
     """Проверка корректности параметра времени."""
+    if storage_data == {} or time <= max(storage_data.keys()):
+        return False
+    else:
+        return True
+        
+'''
     return time > max_time(storage_data) and storage_data
-  
+'''
     # Если словарь для хранения не пустой
     # и значение времени, полученное в аргументе,
     # меньше или равно самому большому значению ключа в словаре,
@@ -62,9 +75,13 @@ def get_distance(steps):
 def get_spent_calories(dist, current_time):
     """Получить значения потраченных калорий."""
     minutes = (current_time.hour * 60.0 + current_time.minute)
+    
     hours = (current_time.hour + current_time.minute / 60.0)
+    
     mean_speed = dist / hours
+    
     spent_calories = (K_1 * WEIGHT + (mean_speed**2 / HEIGHT) * K_2 * WEIGHT) * minutes
+    
     return spent_calories
     # В уроке «Последовательности» вы написали формулу расчета калорий.
     # Перенесите её сюда и верните результат расчётов.
@@ -102,7 +119,7 @@ def show_message(pack_time, day_steps, dist, spent_calories, achievement):
 def accept_package(data):
     """Обработать пакет данных."""
 
-    if not check_correct_data(data): # Если функция проверки пакета вернет False
+    if check_correct_data(data) == False: # Если функция проверки пакета вернет False
         return 'Некорректный пакет'
 
     # Распакуйте полученные данные.
@@ -112,13 +129,20 @@ def accept_package(data):
         return 'Некорректное значение времени'
 
     day_steps = get_step_day(data[1]) # Запишите результат подсчёта пройденных шагов.
+    
     dist = get_distance(day_steps) # Запишите результат расчёта пройденной дистанции.
+    
     spent_calories = get_spent_calories(dist, pack_time) # Запишите результат расчёта сожжённых калорий.
+    
     achievement = get_achievement(dist) # Запишите выбранное мотивирующее сообщение.
+    
     # Вызовите функцию show_message().
+    
     show_message(pack_time, day_steps, dist, spent_calories, achievement)
+    
     # Добавьте новый элемент в словарь storage_data.
-    storage_data[data[0]] = data[1]
+    
+    storage_data[pack_time] = day_steps
     # Верните словарь storage_data.
     return storage_data
 
