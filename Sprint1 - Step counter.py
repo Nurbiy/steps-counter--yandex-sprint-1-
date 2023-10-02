@@ -41,8 +41,11 @@ def max_time(any_dict):
 
 def check_correct_time(time):
     """Проверка корректности параметра времени."""
-    if storage_data == {} or time <= max(storage_data.keys()):
-        return False
+    if storage_data == {}:
+        return True
+    elif storage_data != {}:
+        if time <= max(storage_data.keys()):
+            return False
     else:
         return True
         
@@ -125,7 +128,7 @@ def accept_package(data):
     # Распакуйте полученные данные.
     pack_time = dt.datetime.strptime(data[0], FORMAT).time() # Преобразуйте строку с временем в объект типа time.
 
-    if check_correct_time(pack_time): # Если функция проверки значения времени вернет False
+    if check_correct_time(pack_time) == False: # Если функция проверки значения времени вернет False
         return 'Некорректное значение времени'
 
     day_steps = get_step_day(data[1]) # Запишите результат подсчёта пройденных шагов.
